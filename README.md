@@ -6,6 +6,8 @@ application up and running.
 
 Things you may want to cover:
 
+* mind map link -> http://www.xmind.net/m/LG9aaK
+
 * Ruby version
 
 * System dependencies
