@@ -3,22 +3,23 @@ module Api
     class SalesmanController < ApplicationController
 
       def create
-        if params[:name].nil? || params[:status].nil?
-          render nothing: true, status: 400, json: { status: 400, data: 'Bad Request' }
-        else
-          salesman = ::Salesman.new({
-            name: params[:name],
-            status: params[:status]
-          })
-          salesman.save
+        if salesman_params.permitted?
+          result = salesman_service
 
-          render status: 201, json: { data: salesman, status: 201 }
+          if result.errors.blank?
+            render status: 201, json: { data: result, status: 201 }
+          else
+            render nothing: true, status: 400, json: { status: 400, data: result.errors[:name] }
+          end
+        else
+          render nothing: true, status: 400, json: { status: 400, data: 'Bad Request' }
         end
       end
 
       def update
-        salesman = ::Salesman.find(params[:id])
-        if salesman.valid?
+        salesman = ::Salesman.find_by(id: params[:id])
+
+        unless salesman.blank?
           salesman.name = params[:name]
           salesman.status = params[:status]
           salesman.save
@@ -28,6 +29,15 @@ module Api
         end
       end
 
+      private
+
+      def salesman_service
+        ::Services::Salesman::Create.new(params: salesman_params).call
+      end
+
+      def salesman_params
+        params.require(:salesman).permit(:name, :status)
+      end
     end
   end
 end
