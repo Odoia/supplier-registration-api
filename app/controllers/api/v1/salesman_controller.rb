@@ -7,32 +7,37 @@ module Api
           result = salesman_service
 
           if result.errors.blank?
-            render status: 201, json: { data: result, status: 201 }
+            render status: 201, json: {data: result, status: 201}
           else
-            render nothing: true, status: 400, json: { status: 400, data: result.errors[:name] }
+            render nothing: true, status: 400, json: {status: 400, data: result.errors[:name]}
           end
         else
-          render nothing: true, status: 400, json: { status: 400, data: 'Bad Request' }
+          render nothing: true, status: 400, json: {status: 400, data: 'Bad Request'}
         end
       end
 
       def update
-        salesman = ::Salesman.find_by(id: params[:id])
+        salesman = salesman_service_update
 
-        unless salesman.blank?
-          salesman.name = params[:name]
-          salesman.status = params[:status]
-          salesman.save
-          render status: 200, json: {data: salesman, status:200}
+        if salesman == 404
+
+          render status: 404, json: {status: 404, data: 'Not Found'}
+
         else
-          render status: 404, json: {status: 404, data:'Not Found'}
+
+          render status: 200, json: {data: salesman, status: 200}
+
         end
       end
 
       private
 
-      def salesman_service
+      def salesman_service_create
         ::Services::Salesman::Create.new(params: salesman_params).call
+      end
+
+      def salesman_service_update
+        ::Services::Salesman::Update.new(params[:id], salesman_params[:name], salesman_params[:status]).call
       end
 
       def salesman_params

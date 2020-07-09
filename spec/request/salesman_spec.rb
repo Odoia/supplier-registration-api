@@ -10,7 +10,7 @@ describe '::Api::V1::SalesmanController', type: :request do
         }
         salesman = ::Salesman.create(params)
 
-        put "/api/v1/salesman/#{salesman.id}", params:params
+        put "/api/v1/salesman/#{salesman.id}", params: { salesman: params }
         expect(response).to have_http_status(200)
       end
 
@@ -20,7 +20,7 @@ describe '::Api::V1::SalesmanController', type: :request do
           status: 'ok'
         }
         salesman = ::Salesman.create(params)
-        put "/api/v1/salesman/#{salesman.id}", params:params
+        put "/api/v1/salesman/#{salesman.id}", params: { salesman: params }
         expect(salesman.reload).to have_attributes(params)
       end
     end
@@ -29,7 +29,7 @@ describe '::Api::V1::SalesmanController', type: :request do
       it 'should return http status 404' do
         params = { name: 'Teste', status: 'ok', id: 50 }
 
-        put '/api/v1/salesman/100', params: params
+        put '/api/v1/salesman/100', params: { salesman: params }
 
         expect(response.status).to eql 404
       end
@@ -40,8 +40,8 @@ describe '::Api::V1::SalesmanController', type: :request do
           status: 'ok'
         }
         salesman = ::Salesman.create(params)
-        id = 22
-        put "/api/v1/salesman/#{id}"
+        id = salesman.id + 1
+        put "/api/v1/salesman/#{id}", params: { salesman: params }
 
         body = JSON.parse response.body
         expect(body['data']).to eql 'Not Found'
