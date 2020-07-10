@@ -7,12 +7,12 @@ module Api
           result = salesman_service_create
 
           if result.errors.blank?
-            render status: 201, json: { data: result, status: 201 }
+            render status: 201, json: {data: result, status: 201}
           else
-            render nothing: true, status: 400, json: { status: 400, data: result.errors[:name] }
+            render nothing: true, status: 400, json: {status: 400, data: result.errors[:name]}
           end
         else
-          render nothing: true, status: 400, json: { status: 400, data: 'Bad Request' }
+          render nothing: true, status: 400, json: {status: 400, data: 'Bad Request'}
         end
       end
 
@@ -21,11 +21,11 @@ module Api
 
         if salesman.blank?
 
-          render status: 404, json: { status: 404, data: 'Not Found' }
+          render status: 404, json: {status: 404, data: 'Not Found'}
 
         else
 
-          render status: 200, json: { data: salesman, status: 200 }
+          render status: 200, json: {data: salesman, status: 200}
 
         end
       end
