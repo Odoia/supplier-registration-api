@@ -11,7 +11,7 @@ describe ::Api::V1::SalesmanController, type: :controller do
             status: ''
         }
 
-        post :create, params: {salesman: params}
+        post :create, params: { salesman: params }
         expect(response.status).to be 400
       end
 
@@ -23,7 +23,7 @@ describe ::Api::V1::SalesmanController, type: :controller do
               status: 'ok',
           }
 
-          post :create, params: {salesman: params}
+          post :create, params: { salesman: params }
           body = JSON.parse response.body
           expect(body['data']).to eq ["can't be blank"]
         end
@@ -38,7 +38,7 @@ describe ::Api::V1::SalesmanController, type: :controller do
             status: 'ok'
         }
 
-        post :create, params: {salesman: params}
+        post :create, params: { salesman: params }
         expect(::Salesman.count).to equal 1
       end
 
@@ -48,7 +48,7 @@ describe ::Api::V1::SalesmanController, type: :controller do
             status: 'ok'
         }
 
-        post :create, params: {salesman: params}
+        post :create, params: { salesman: params }
         expect(response.status).to be 201
       end
 
@@ -58,7 +58,7 @@ describe ::Api::V1::SalesmanController, type: :controller do
             status: 'ok'
         }
 
-        post :create, params: {salesman: params}
+        post :create, params: { salesman: params }
         body = JSON.parse response.body
         expect(body['data']['name']).to eq 'joao'
       end
