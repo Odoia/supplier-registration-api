@@ -1,9 +1,9 @@
 module Services
   module Salesman
     class Update
-      def initialize(id, name, status)
-        @name = name
-        @status = status
+      def initialize(id:, update_params:)
+        @name = update_params[:name]
+        @status = update_params[:status]
         @id = id
       end
 
@@ -18,11 +18,9 @@ module Services
       def update_salesman
         salesman = ::Salesman.find_by(id: id)
         if salesman.blank?
-          404
+          nil
         else
-          salesman.name = salesman_params[:name]
-          salesman.status = salesman_params[:status]
-          salesman.save
+          salesman.update(salesman_params)
           salesman
         end
       end
