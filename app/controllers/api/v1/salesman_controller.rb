@@ -4,7 +4,7 @@ module Api
 
       def create
         if salesman_params.permitted?
-          result = salesman_service
+          result = salesman_service_create
 
           if result.errors.blank?
             render status: 201, json: { data: result, status: 201 }
@@ -17,22 +17,27 @@ module Api
       end
 
       def update
-        salesman = ::Salesman.find_by(id: params[:id])
+        salesman = salesman_service_update
 
-        unless salesman.blank?
-          salesman.name = params[:name]
-          salesman.status = params[:status]
-          salesman.save
-          render status: 200, json: {data: salesman, status:200}
+        if salesman.blank?
+
+          render status: 404, json: { status: 404, data: 'Not Found' }
+
         else
-          render status: 404, json: {status: 404, data:'Not Found'}
+
+          render status: 200, json: { data: salesman, status: 200 }
+
         end
       end
 
       private
 
-      def salesman_service
+      def salesman_service_create
         ::Services::Salesman::Create.new(params: salesman_params).call
+      end
+
+      def salesman_service_update
+        ::Services::Salesman::Update.new(id: params[:id], update_params: salesman_params).call
       end
 
       def salesman_params
