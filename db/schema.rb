@@ -10,14 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_03_011542) do
+ActiveRecord::Schema.define(version: 2020_07_11_205518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "phones", force: :cascade do |t|
+    t.string "number"
+    t.boolean "whatsapp"
+    t.bigint "salesman_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["salesman_id"], name: "index_phones_on_salesman_id"
+  end
+
   create_table "salesmen", force: :cascade do |t|
     t.string "name"
     t.string "status"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end

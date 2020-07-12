@@ -1,18 +1,15 @@
 module Api
   module V1
     class SalesmanController < ApplicationController
+      before_action :salesman_params, only: [:create]
 
       def create
-        if salesman_params.permitted?
-          result = salesman_service_create
+        result = salesman_service_create
 
-          if result.errors.blank?
-            render status: 201, json: { data: result, status: 201 }
-          else
-            render nothing: true, status: 400, json: { status: 400, data: result.errors[:name] }
-          end
+        unless result.id.nil?
+          render status: 201, json: { data: result, status: 201 }
         else
-          render nothing: true, status: 400, json: { status: 400, data: 'Bad Request' }
+          render_error(error: 'bad request', status: 400, msg: result.errors[:name])
         end
       end
 
@@ -20,13 +17,9 @@ module Api
         salesman = salesman_service_update
 
         if salesman.blank?
-
-          render status: 404, json: { status: 404, data: 'Not Found' }
-
+          render_error(error: 'Not found', status: 404)
         else
-
-          render status: 200, json: { data: salesman, status: 200 }
-
+          render_error(error: 'ok', status: 200)
         end
       end
 
@@ -41,7 +34,16 @@ module Api
       end
 
       def salesman_params
-        params.require(:salesman).permit(:name, :status)
+
+        if params[:salesman][:phone].blank?
+          render_error
+        end
+
+        params.require(:salesman).permit(:name, :status, phone: [:number, :whatsapp])
+      end
+
+      def render_error(error: 'bad Request', status: 400, msg: '')
+        render nothing: true, status: status, json: { status: status, data: error, msg: msg }
       end
     end
   end
