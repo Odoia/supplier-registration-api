@@ -30,7 +30,7 @@ module Api
       end
 
       def salesman_service_update
-        ::Services::Salesman::Update.new(id: params[:id], update_params: salesman_params).call
+        ::Services::Salesman::Update.new(id: params[:id], update_params: salesman_params_update).call
       end
 
       def salesman_params
@@ -40,6 +40,11 @@ module Api
         end
 
         params.require(:salesman).permit(:name, :status, phone: [:number, :whatsapp])
+      end
+
+      def salesman_params_update
+
+        params.require(:salesman).permit(:name, :status)
       end
 
       def render_error(error: 'bad Request', status: 400, msg: '')
