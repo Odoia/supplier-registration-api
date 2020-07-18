@@ -23,6 +23,18 @@ module Api
         end
       end
 
+      def add_phone
+
+        result = phone_service_create
+
+        if result.blank?
+          render_error(error: 'bad request', status: 400)
+        else
+          render status: 201, json: { data: result, status: 201 }
+        end
+
+      end
+
       private
 
       def salesman_service_create
@@ -31,6 +43,10 @@ module Api
 
       def salesman_service_update
         ::Services::Salesman::Update.new(id: params[:id], update_params: salesman_params_update).call
+      end
+
+      def phone_service_create
+        ::Services::Phone::Create.new(params: salesman_params_phone[:phone], salesman_id: params[:id]).call
       end
 
       def salesman_params
@@ -45,6 +61,15 @@ module Api
       def salesman_params_update
 
         params.require(:salesman).permit(:name, :status)
+      end
+
+      def salesman_params_phone
+
+        if params[:salesman][:phone].blank?
+          render_error
+        end
+
+        params.require(:salesman).permit(phone: [:number, :whatsapp])
       end
 
       def render_error(error: 'bad Request', status: 400, msg: '')

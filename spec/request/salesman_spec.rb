@@ -79,4 +79,37 @@ describe '::Api::V1::SalesmanController', type: :request do
       end
     end
   end
+  describe 'When want add or disable phone the of salesman' do
+
+    context 'when request attributes are valid' do
+      it 'should add one phone and return status code 201' do
+
+        params = {
+          phone: [
+            { number: '8288776501', whatsapp: true }
+          ]
+        }
+
+        post '/api/v1/salesman/1/add-phone', params: { salesman: params }
+
+        expect(response.status).to eql 201
+
+      end
+    end
+
+    context 'when request attributes are invalid' do
+      it 'should return a bad request when phone is null' do
+
+        params = {
+          phone: []
+        }
+
+        post '/api/v1/salesman/1/add-phone', params: { salesman: params }
+        body = JSON.parse response.body
+        expect(body['data']).to eq 'bad request'
+
+      end
+    end
+
+  end
 end
