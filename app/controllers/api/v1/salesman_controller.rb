@@ -35,6 +35,21 @@ module Api
 
       end
 
+      def disable_phone
+
+        result = phone_service_disable
+
+        if result.blank?
+          render_error(error: 'Not found', status: 404)
+
+        elsif result[:errors]
+          render_error(error: result[:errors], status: 404)
+        else
+          render status: 200, json: { data: result, status: 200 }
+        end
+
+      end
+
       private
 
       def salesman_service_create
@@ -48,6 +63,11 @@ module Api
       def phone_service_create
         ::Services::Phone::Create.new(params: salesman_params_phone[:phone], salesman_id: params[:id]).call
       end
+
+      def phone_service_disable
+        ::Services::Phone::Disable.new(salesman_id: params[:salesman_id], phone_id: params[:phone_id]).call
+      end
+
 
       def salesman_params
 
