@@ -22,7 +22,8 @@ module Services
           result = ::Phone.new(
             salesman_id: salesman_id,
             number: phone[:number],
-            whatsapp: phone[:whatsapp]
+            whatsapp: phone[:whatsapp],
+            active: true
           )
           result.save
           result
