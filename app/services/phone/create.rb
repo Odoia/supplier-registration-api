@@ -16,7 +16,7 @@ module Services
       attr_reader :phones, :salesman_id
 
       def make_phone
-        return nil unless phones 
+        return nil unless phones
 
         phones.map do |phone|
           result = ::Phone.new(

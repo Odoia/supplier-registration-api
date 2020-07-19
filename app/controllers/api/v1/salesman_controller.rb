@@ -9,7 +9,7 @@ module Api
         unless result.id.nil?
           render status: 201, json: { data: result, status: 201 }
         else
-          render_error(error: 'bad request', status: 400, msg: result.errors[:name])
+          render_error(error: I18n.t('bad_request'), status: 400, msg: result.errors[:name])
         end
       end
 
@@ -17,9 +17,9 @@ module Api
         salesman = salesman_service_update
 
         if salesman.blank?
-          render_error(error: 'Not found', status: 404)
+          render_error(error: I18n.t('not_found'), status: 404)
         else
-          render_error(error: 'ok', status: 200)
+          render_error(error: I18n.t('ok'), status: 200)
         end
       end
 
@@ -28,7 +28,7 @@ module Api
         result = phone_service_create
 
         if result.blank?
-          render_error(error: 'bad request', status: 400)
+          render_error(error: I18n.t('bad_request'), status: 400)
         else
           render status: 201, json: { data: result, status: 201 }
         end
@@ -40,7 +40,7 @@ module Api
         result = phone_service_disable
 
         if result.blank?
-          render_error(error: 'Not found', status: 404)
+          render_error(error: I18n.t('not_found'), status: 404)
 
         elsif result[:errors]
           render_error(error: result[:errors], status: 404)
@@ -92,7 +92,7 @@ module Api
         params.require(:salesman).permit(phone: [:number, :whatsapp])
       end
 
-      def render_error(error: 'bad Request', status: 400, msg: '')
+      def render_error(error: I18n.t('bad_request'), status: 400, msg: '')
         render nothing: true, status: status, json: { status: status, data: error, msg: msg }
       end
     end

@@ -16,30 +16,28 @@ module Services
       attr_reader :phone_id, :salesman_id
 
       def disable_phone
-        phone = ::Phone.find_by(id: phone_id)
+        return nil if phone.blank?
 
-        if phone.blank?
-          nil
+        return validate_disable unless validate_disable.blank?
 
-        elsif verify_amount_whatsapp == 1 && phone.whatsapp
+        phone.active = false
+        phone.save
+        phone
+      end
 
-          result = { errors: "Salesman must have at least one number whatsapp" }
-          result
-
-        else
-          phone.active = false
-          phone.save
-          phone
+      def validate_disable
+        if whatsapp_counter_by_salesman == 1 && phone.whatsapp
+          { errors: 'Salesman must have at least one number whatsapp' }
         end
       end
 
-
-      def verify_amount_whatsapp
-
-        whatsapps = ::Phone.where(whatsapp: true).where(salesman_id: salesman_id).count
-        whatsapps
+      def phone
+        ::Phone.find_by(id: phone_id)
       end
 
+      def whatsapp_counter_by_salesman
+        ::Salesman.find_by(id: salesman_id).whatsapp_counter
+      end
     end
   end
 end

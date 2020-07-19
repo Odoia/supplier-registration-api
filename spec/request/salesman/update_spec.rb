@@ -75,7 +75,7 @@ describe '::Api::V1::SalesmanController', type: :request do
         put "/api/v1/salesman/#{id}", params: { salesman: params_update }
 
         body = JSON.parse response.body
-        expect(body['data']).to eql 'Not found'
+        expect(body['data']).to eql 'Not Found'
       end
     end
   end
@@ -109,7 +109,7 @@ describe '::Api::V1::SalesmanController', type: :request do
 
         post '/api/v1/salesman/1/add-phone', params: { salesman: params }
         body = JSON.parse response.body
-        expect(body['data']).to eq 'bad request'
+        expect(body['data']).to eq 'Bad Request'
 
       end
     end
@@ -162,7 +162,7 @@ describe '::Api::V1::SalesmanController', type: :request do
         put "/api/v1/salesman/#{saleman_id}/disable-phone/#{phone_id}"
         body_phone = JSON.parse response.body
 
-        expect(body_phone['data']).to eql 'Not found'
+        expect(body_phone['data']).to eql 'Not Found'
 
       end
 
@@ -172,7 +172,7 @@ describe '::Api::V1::SalesmanController', type: :request do
           name: 'joao created',
           status: 'ok',
           phone: [
-            { number: '8288776501', whatsapp: true },
+            { number: '8288776501', whatsapp: true }
           ]
         }
         post '/api/v1/salesman', params: { salesman: params }
