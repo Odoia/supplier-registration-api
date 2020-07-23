@@ -19,7 +19,7 @@ module Api
         if salesman.blank?
           render_error(error: I18n.t('not_found'), status: 404)
         else
-          render_error(error: I18n.t('ok'), status: 200)
+          render status: 200, json: { data: salesman, status: 201 }
         end
       end
 
