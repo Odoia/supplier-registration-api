@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'faker'
 
 describe '::Api::V1::SalesmanController', type: :request do
 
@@ -41,10 +40,12 @@ describe '::Api::V1::SalesmanController', type: :request do
   end
 
   describe 'When need update a salesman' do
-    let(:execute_actions) do
-      post url, params: { salesman: valid_params_create }
-    end
+
     context 'when request attributes are valid' do
+      let(:execute_actions) do
+        post url, params: { salesman: valid_params_create }
+      end
+
       it 'Should return status code 200' do
 
         put "#{url}/#{body['data']['id']}", params: { salesman: valid_params_update }
@@ -61,6 +62,10 @@ describe '::Api::V1::SalesmanController', type: :request do
     end
 
     context 'When the salesman does not exist' do
+      let(:execute_actions) do
+        post url, params: { salesman: valid_params_create }
+      end
+
       it 'Should return http status 404' do
 
         put "#{url}/100", params: { salesman: valid_params_update }
@@ -80,6 +85,10 @@ describe '::Api::V1::SalesmanController', type: :request do
     describe 'When need add the phone the of salesman' do
 
       context 'When request attributes are valid for add a phone' do
+        let(:execute_actions) do
+          post url, params: { salesman: valid_params_create }
+        end
+
         it 'Should add one phone and return status code 201' do
 
           salesman_id = 1
@@ -93,6 +102,10 @@ describe '::Api::V1::SalesmanController', type: :request do
       end
 
       context 'When request attributes are invalid for add a phone' do
+        let(:execute_actions) do
+          post url, params: { salesman: valid_params_create }
+        end
+
         it 'should return a bad request when phone is null' do
 
           params = {
@@ -110,6 +123,9 @@ describe '::Api::V1::SalesmanController', type: :request do
     describe 'When need disable the phone the of salesman' do
 
       context 'When request attributes are valid for disable a phone ' do
+        let(:execute_actions) do
+          post url, params: { salesman: valid_params_create }
+        end
 
         it 'Should disable a phone and return status code 200' do
 
@@ -122,6 +138,9 @@ describe '::Api::V1::SalesmanController', type: :request do
         end
       end
       context 'When request attributes are invalid for disable a phone' do
+        let(:execute_actions) do
+          post url, params: { salesman: valid_params_create }
+        end
 
         it 'should return a not found message when phone not exists' do
 

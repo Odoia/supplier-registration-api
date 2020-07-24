@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'faker'
 
 describe '::Api::V1::SalesmanController', type: :request do
 
