@@ -4,4 +4,7 @@ Rails.application.routes.draw do
   put 'api/v1/salesman/:id' => 'api/v1/salesman#update'
   post 'api/v1/salesman/:id/add-phone' => 'api/v1/salesman#add_phone'
   put 'api/v1/salesman/:salesman_id/disable-phone/:phone_id' => 'api/v1/salesman#disable_phone'
+
+  post 'api/v1/supplier' => 'api/v1/supplier#create'
+
 end
