@@ -3,23 +3,34 @@ module Services
     class Create
 
       def initialize(params:)
-        @name = params[:name]
+        @name   = params[:name]
         @status = params[:status]
+        @phone  = params[:phone]
       end
 
       def call
-        create_salesman
+        make_salesman
       end
 
       private
 
-      attr_reader :name, :status
+      attr_reader :name, :status, :phone
+
+      def make_salesman
+        ActiveRecord::Base.transaction do
+          result_salesman = create_salesman
+
+          return result_salesman unless result_salesman.errors.blank?
+
+          phone_service(result_salesman.id)
+
+          ::Presenters::Salesman.new(result_salesman)
+        end
+
+      end
 
       def create_salesman
         result = ::Salesman.new(salesman_params)
-
-        return result unless result.valid?
-
         result.save
         result
       end
@@ -29,6 +40,10 @@ module Services
           name: name,
           status: status
         }
+      end
+
+      def phone_service(salesman_id)
+        ::Services::Phone::Create.new(params: phone, salesman_id: salesman_id).call
       end
     end
   end

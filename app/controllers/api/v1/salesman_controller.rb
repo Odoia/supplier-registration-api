@@ -1,18 +1,15 @@
 module Api
   module V1
     class SalesmanController < ApplicationController
+      before_action :salesman_params, only: [:create]
 
       def create
-        if salesman_params.permitted?
-          result = salesman_service_create
+        result = salesman_service_create
 
-          if result.errors.blank?
-            render status: 201, json: { data: result, status: 201 }
-          else
-            render nothing: true, status: 400, json: { status: 400, data: result.errors[:name] }
-          end
+        unless result.id.nil?
+          render status: 201, json: { data: result, status: 201 }
         else
-          render nothing: true, status: 400, json: { status: 400, data: 'Bad Request' }
+          render_error(error: I18n.t('bad_request'), status: 400, msg: result.errors[:name])
         end
       end
 
@@ -20,14 +17,37 @@ module Api
         salesman = salesman_service_update
 
         if salesman.blank?
-
-          render status: 404, json: { status: 404, data: 'Not Found' }
-
+          render_error(error: I18n.t('not_found'), status: 404)
         else
-
-          render status: 200, json: { data: salesman, status: 200 }
-
+          render status: 200, json: { data: salesman, status: 201 }
         end
+      end
+
+      def add_phone
+
+        result = phone_service_create
+
+        if result.blank?
+          render_error(error: I18n.t('bad_request'), status: 400)
+        else
+          render status: 201, json: { data: result, status: 201 }
+        end
+
+      end
+
+      def disable_phone
+
+        result = phone_service_disable
+
+        if result.blank?
+          render_error(error: I18n.t('not_found'), status: 404)
+
+        elsif result[:errors]
+          render_error(error: result[:errors], status: 404)
+        else
+          render status: 200, json: { data: result, status: 200 }
+        end
+
       end
 
       private
@@ -37,11 +57,43 @@ module Api
       end
 
       def salesman_service_update
-        ::Services::Salesman::Update.new(id: params[:id], update_params: salesman_params).call
+        ::Services::Salesman::Update.new(id: params[:id], update_params: salesman_params_update).call
       end
 
+      def phone_service_create
+        ::Services::Phone::Create.new(params: salesman_params_phone[:phone], salesman_id: params[:id]).call
+      end
+
+      def phone_service_disable
+        ::Services::Phone::Disable.new(salesman_id: params[:salesman_id], phone_id: params[:phone_id]).call
+      end
+
+
       def salesman_params
+
+        if params[:salesman][:phone].blank?
+          render_error
+        end
+
+        params.require(:salesman).permit(:name, :status, phone: [:number, :whatsapp])
+      end
+
+      def salesman_params_update
+
         params.require(:salesman).permit(:name, :status)
+      end
+
+      def salesman_params_phone
+
+        if params[:salesman][:phone].blank?
+          render_error
+        end
+
+        params.require(:salesman).permit(phone: [:number, :whatsapp])
+      end
+
+      def render_error(error: I18n.t('bad_request'), status: 400, msg: '')
+        render nothing: true, status: status, json: { status: status, data: error, msg: msg }
       end
     end
   end
