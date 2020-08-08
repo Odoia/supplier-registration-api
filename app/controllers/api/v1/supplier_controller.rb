@@ -3,7 +3,7 @@ module Api
     class SupplierController < ApplicationController
 
       def create
-        supplier =  params['supplier']
+        supplier = params['supplier']
         result = ::Supplier.new(
           cnpj: supplier['cnpj'],
           fantasy_name: supplier['fantasy_name'],
@@ -14,15 +14,25 @@ module Api
       end
 
       def update
-        result = ::Supplier.find_by(id: params['id'])
-        result.update(
-          cnpj: params['cnpj'],
-          fantasy_name: params['fantasy_name'],
-          social_reason: params['social_reason']
-        )
-        result.save
+        result = supplier_service_update
+        if result.nil?
+          return render status: 404, json: { data: 'Not Found', status: 404 }
+        end
         render status: 200, json: { data: result, status: 200 }
       end
+
+      def supplier_service_update
+        ::Services::Supplier::Update.new(id: params[:id], params: supplier_params).call
+      end
+
+      def supplier_params
+        params.permit(
+          :cnpj,
+          :fantasy_name,
+          :social_reason
+        )
+      end
+
     end
   end
 end
