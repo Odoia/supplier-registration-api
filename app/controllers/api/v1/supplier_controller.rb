@@ -4,7 +4,9 @@ module Api
       before_action :supplier_params, only: [:create]
 
       def index
-        Supplier.all
+       result = Supplier.all
+
+       render status: 200, json: { data: result, status: 200 }
       end
 
       def create

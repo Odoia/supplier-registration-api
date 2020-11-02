@@ -4,7 +4,8 @@ module Api
       before_action :salesman_params, only: [:create]
 
       def index
-        Salesman.all
+        result = Salesman.all
+       render status: 200, json: { data: result, status: 200 }
       end
 
       def create

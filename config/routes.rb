@@ -9,5 +9,4 @@ Rails.application.routes.draw do
   get 'api/v1/supplier' => 'api/v1/supplier#show'
   post 'api/v1/supplier' => 'api/v1/supplier#create'
   put 'api/v1/supplier/:id' => 'api/v1/supplier#update'
-
 end
