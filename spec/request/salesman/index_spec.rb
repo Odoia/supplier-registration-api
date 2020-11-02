@@ -11,21 +11,9 @@ describe '::Api::V1::SalesmanController', type: :request do
 
   let(:execute_actions) {}
 
-  let(:invalid_params) do
-    {
-      name: '',
-      status: ''
-    }
-  end
-
-  let(:invalid_params_without_name) do
-    {
-      name: '',
-      status: Faker::Name.name,
-      phone: [
-        { number: Faker::PhoneNumber.cell_phone, whatsapp: true }
-      ]
-    }
+  let(:create_2_salesman) do
+    post url, params: { salesman: valid_params }
+    post url, params: { salesman: valid_params }
   end
 
   let(:valid_params) do
@@ -42,49 +30,29 @@ describe '::Api::V1::SalesmanController', type: :request do
 
   let(:body) { JSON.parse response.body }
 
-  describe 'When need register a salesman' do
-    context 'When pass a invalid params' do
+  describe 'When get all salesman' do
+    context 'When get more then one' do
       let(:execute_actions) do
-        post url, params: { salesman: invalid_params }
+        create_2_salesman
+        get url
       end
 
-      it 'shoud be return a http status 400 when params is empty' do
-        expect(response.status).to be 400
+      it 'shoud be return a http status 200' do
+        expect(response.status).to be 200
       end
 
-      context 'When not pass a name' do
-        let(:execute_actions) do
-          post url, params: { salesman: invalid_params_without_name }
-        end
-
-        it 'must be return a error name empty' do
-          expect(body['msg']).to eq ["can't be blank"]
-        end
+      it 'shoud be return a array with count == 2' do
+        expect(body["data"].count).to be 2
       end
     end
 
-    context 'When pass a valid params' do
+    context 'When no have a salesman registered' do
       let(:execute_actions) do
-        post url, params: { salesman: valid_params }
+        get url
       end
 
-      it 'count must be return 1 salesman with 2 whatsapp numbers and 1 normal phone' do
-        expect(::Salesman.count).to equal 1
-        expect(::Phone.count).to equal 3
-      end
-
-      it 'shoud be return a http status 201' do
-        expect(response.status).to be 201
-      end
-
-      it 'shoud be return created salesman with phone' do
-        expect(body['data']['name']).to eq valid_params[:name]
-        expect(body['data']['phones'].first['number']).to eq valid_params[:phone][0][:number]
-        expect(body['data']['phones'].first['whatsapp']).to eq true
-        expect(body['data']['phones'].second['number']).to eq valid_params[:phone][1][:number]
-        expect(body['data']['phones'].second['whatsapp']).to eq true
-        expect(body['data']['phones'].third['number']).to eq valid_params[:phone][2][:number]
-        expect(body['data']['phones'].third['whatsapp']).to eq false
+      it 'should be return a empty array' do
+        expect(body["data"].count).to be 0
       end
     end
   end
