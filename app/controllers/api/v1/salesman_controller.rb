@@ -3,6 +3,10 @@ module Api
     class SalesmanController < ApplicationController
       before_action :salesman_params, only: [:create]
 
+      def index
+        Salesman.all
+      end
+
       def create
         result = salesman_service_create
 
@@ -19,7 +23,7 @@ module Api
         if salesman.blank?
           render_error(error: I18n.t('not_found'), status: 404)
         else
-          render status: 200, json: { data: salesman, status: 201 }
+          render status: 200
         end
       end
 
@@ -32,7 +36,6 @@ module Api
         else
           render status: 201, json: { data: result, status: 201 }
         end
-
       end
 
       def disable_phone

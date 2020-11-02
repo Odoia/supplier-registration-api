@@ -3,6 +3,10 @@ module Api
     class SupplierController < ApplicationController
       before_action :supplier_params, only: [:create]
 
+      def index
+        Supplier.all
+      end
+
       def create
         result = create_supplier
         unless result.id.nil?

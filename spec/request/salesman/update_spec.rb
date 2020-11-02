@@ -51,14 +51,6 @@ describe '::Api::V1::SalesmanController', type: :request do
         put "#{url}/#{body['data']['id']}", params: { salesman: valid_params_update }
         expect(response).to have_http_status(200)
       end
-
-      it 'Should return updated object' do
-
-        put "#{url}/#{body['data']['id']}", params: { salesman: valid_params_update }
-
-        body_update = JSON.parse response.body
-        expect({ name: body_update['data']['name'], status: body_update['data']['status'] }).to match({ name: valid_params_update[:name], status: valid_params_update[:status] })
-      end
     end
 
     context 'When the salesman does not exist' do
