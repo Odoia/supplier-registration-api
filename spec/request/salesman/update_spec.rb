@@ -17,7 +17,7 @@ describe '::Api::V1::SalesmanController', type: :request do
     {
       name: Faker::Name.name,
       status: Faker::Name.name,
-      phone: [
+      phones: [
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true },
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true }
       ]
@@ -33,7 +33,7 @@ describe '::Api::V1::SalesmanController', type: :request do
 
   let(:valid_params_phone) do
     {
-      phone: [
+      phones: [
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true }
       ]
     }
@@ -74,23 +74,17 @@ describe '::Api::V1::SalesmanController', type: :request do
         expect(body_update['data']).to eql 'Not Found'
       end
     end
-    describe 'When need add the phone the of salesman' do
 
+    context 'When need add the phone the of salesman' do
       context 'When request attributes are valid for add a phone' do
         let(:execute_actions) do
-          post url, params: { salesman: valid_params_create }
+          salesman_id = 1
+          post "#{url}/#{salesman_id}/add-phone", params: { phones: valid_params_phone }
         end
 
         it 'Should add one phone and return status code 201' do
-
-          salesman_id = 1
-
-          post "#{url}/#{salesman_id}/add-phone", params: { salesman: valid_params_phone }
-
-          expect(response.status).to eql 201
-
+          expect(body['status']).to eql 201
         end
-
       end
 
       context 'When request attributes are invalid for add a phone' do
@@ -101,10 +95,11 @@ describe '::Api::V1::SalesmanController', type: :request do
         it 'should return a bad request when phone is null' do
 
           params = {
-            phone: []
+            phones: []
           }
 
-          post "#{url}/1/add-phone", params: { salesman: params }
+          
+          post "#{url}/1/add-phone", params: { phones: params }
           body = JSON.parse response.body
           expect(body['data']).to eq 'Bad Request'
 
@@ -112,6 +107,7 @@ describe '::Api::V1::SalesmanController', type: :request do
       end
 
     end
+
     describe 'When need disable the phone the of salesman' do
 
       context 'When request attributes are valid for disable a phone ' do
@@ -129,6 +125,7 @@ describe '::Api::V1::SalesmanController', type: :request do
 
         end
       end
+
       context 'When request attributes are invalid for disable a phone' do
         let(:execute_actions) do
           post url, params: { salesman: valid_params_create }

@@ -22,7 +22,7 @@ describe '::Api::V1::SalesmanController', type: :request do
     {
       name: '',
       status: Faker::Name.name,
-      phone: [
+      phones: [
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true }
       ]
     }
@@ -32,7 +32,7 @@ describe '::Api::V1::SalesmanController', type: :request do
     {
       name: Faker::Name.name,
       status: Faker::Name.name,
-      phone: [
+      phones: [
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true },
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true },
         { number: Faker::PhoneNumber.cell_phone, whatsapp: false }
@@ -79,11 +79,11 @@ describe '::Api::V1::SalesmanController', type: :request do
 
       it 'shoud be return created salesman with phone' do
         expect(body['data']['name']).to eq valid_params[:name]
-        expect(body['data']['phones'].first['number']).to eq valid_params[:phone][0][:number]
+        expect(body['data']['phones'].first['number']).to eq valid_params[:phones][0][:number]
         expect(body['data']['phones'].first['whatsapp']).to eq true
-        expect(body['data']['phones'].second['number']).to eq valid_params[:phone][1][:number]
+        expect(body['data']['phones'].second['number']).to eq valid_params[:phones][1][:number]
         expect(body['data']['phones'].second['whatsapp']).to eq true
-        expect(body['data']['phones'].third['number']).to eq valid_params[:phone][2][:number]
+        expect(body['data']['phones'].third['number']).to eq valid_params[:phones][2][:number]
         expect(body['data']['phones'].third['whatsapp']).to eq false
       end
     end

@@ -20,7 +20,7 @@ describe '::Api::V1::SalesmanController', type: :request do
     {
       name: Faker::Name.name,
       status: Faker::Name.name,
-      phone: [
+      phones: [
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true },
         { number: Faker::PhoneNumber.cell_phone, whatsapp: true },
         { number: Faker::PhoneNumber.cell_phone, whatsapp: false }

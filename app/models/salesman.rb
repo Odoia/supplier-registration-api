@@ -1,5 +1,5 @@
 class Salesman < ApplicationRecord
-has_many :phone, class_name: '::Phone'
+has_many :phones, class_name: '::Phone'
 
   validates :name, presence: true
 

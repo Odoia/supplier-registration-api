@@ -5,7 +5,7 @@ module Services
       def initialize(params:)
         @name   = params[:name]
         @status = params[:status]
-        @phone  = params[:phone]
+        @phone  = params[:phones]
       end
 
       def call

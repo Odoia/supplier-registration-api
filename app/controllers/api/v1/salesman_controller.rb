@@ -29,7 +29,6 @@ module Api
       end
 
       def add_phone
-
         result = phone_service_create
 
         if result.blank?
@@ -65,7 +64,7 @@ module Api
       end
 
       def phone_service_create
-        ::Services::Phone::Create.new(params: salesman_params_phone[:phone], salesman_id: params[:id]).call
+        ::Services::Phone::Create.new(params: salesman_params_phone[:phones], salesman_id: params[:id]).call
       end
 
       def phone_service_disable
@@ -75,11 +74,11 @@ module Api
 
       def salesman_params
 
-        if params[:salesman][:phone].blank?
+        if params[:salesman][:phones].blank?
           render_error
         end
 
-        params.require(:salesman).permit(:name, :status, phone: [:number, :whatsapp])
+        params.require(:salesman).permit(:name, :status, phones: [:number, :whatsapp])
       end
 
       def salesman_params_update
@@ -88,12 +87,11 @@ module Api
       end
 
       def salesman_params_phone
-
-        if params[:salesman][:phone].blank?
+        if params[:phones].blank?
           render_error
         end
 
-        params.require(:salesman).permit(phone: [:number, :whatsapp])
+        params.require(:phones).permit(phones: [:number, :whatsapp])
       end
 
       def render_error(error: I18n.t('bad_request'), status: 400, msg: '')

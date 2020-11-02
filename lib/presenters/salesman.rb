@@ -6,7 +6,7 @@ module Presenters
       @id     = attrs[:id]
       @name   = attrs[:name]
       @status = attrs[:status]
-      @phones = phone_presenter(attrs.phone)
+      @phones = phone_presenter(attrs.phones)
     end
 
     private
